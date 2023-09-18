@@ -1,11 +1,10 @@
 package com.example.api.infra;
 
 import lombok.SneakyThrows;
-import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.images.builder.ImageFromDockerfile;
+import org.testcontainers.utility.MountableFile;
 
-import java.nio.file.Paths;
 import java.time.Duration;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -13,7 +12,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 /**
  * This is a Singleton container, which means that is only started once for some IT test classes
  */
-public class PostgresContainer extends GenericContainer<PostgresContainer> {
+public class PostgresContainer extends PostgreSQLContainer<PostgresContainer> {
 
     private static PostgresContainer container;
 
@@ -21,8 +20,7 @@ public class PostgresContainer extends GenericContainer<PostgresContainer> {
      * Creates a Container based on a specified Dockerfile
      */
     private PostgresContainer() {
-        super(new ImageFromDockerfile()
-                .withDockerfile(Paths.get("src/test/resources/Dockerfile-test")));
+        super("postgres");
     }
 
     /**
@@ -38,6 +36,7 @@ public class PostgresContainer extends GenericContainer<PostgresContainer> {
             container = new PostgresContainer()
                     .withExposedPorts(5432)
                     .withCreateContainerCmdModifier(createContCmd -> createContCmd.withName("postgres-test"))
+                    .withCopyToContainer(MountableFile.forClasspathResource("/dataset/db-dump.sql"), "/docker-entrypoint-initdb.d/")
                     .withReuse(true);
 
             container.addFixedExposedPort(5433, 5432);

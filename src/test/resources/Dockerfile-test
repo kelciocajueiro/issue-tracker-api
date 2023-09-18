@@ -1,9 +1,0 @@
-FROM postgres
-
-ENV POSTGRES_USER itapi_user
-ENV POSTGRES_PASSWORD itapi_pass
-ENV POSTGRES_DB itapi
-
-COPY /dataset/db-dump.sql /docker-entrypoint-initdb.d/
-
-EXPOSE 5433
