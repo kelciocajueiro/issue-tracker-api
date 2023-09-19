@@ -1,26 +1,30 @@
 package com.example.api.model;
 
+import static com.fasterxml.jackson.annotation.JsonCreator.Mode.DELEGATING;
+
+import com.example.api.exception.BugStatusNotValidException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import java.util.Arrays;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Arrays;
 
 @Getter
 public enum BugStatus {
 
-    RESOLVED("Resolved"),
-    UNRESOLVED("Unresolved");
+  RESOLVED("Resolved"),
+  UNRESOLVED("Unresolved");
 
-    private final String displayName;
+  private final String status;
 
-    BugStatus(String displayName) {
-        this.displayName = displayName;
-    }
+  BugStatus(String status) {
+    this.status = status;
+  }
 
-    public static BugStatus from(String displayName) {
-        return Arrays.stream(BugStatus.values())
-                .filter(bugStatus -> StringUtils.equalsIgnoreCase(bugStatus.displayName, displayName))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("No such BugStatus: " + displayName));
-    }
-
+  @JsonCreator(mode = DELEGATING)
+  public static BugStatus from(String status) {
+    return Arrays.stream(BugStatus.values())
+        .filter(bugStatus -> StringUtils.equalsIgnoreCase(bugStatus.status, status))
+        .findFirst()
+        .orElseThrow(() -> new BugStatusNotValidException(status));
+  }
 }

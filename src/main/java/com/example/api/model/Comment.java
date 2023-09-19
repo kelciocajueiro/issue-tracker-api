@@ -1,30 +1,33 @@
 package com.example.api.model;
 
-import lombok.Data;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "comments")
 @Data
 public class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    private String title;
+  @Column(nullable = false)
+  private String title;
 
-    @Column(nullable = false, length = 1000) // Adjust the length as needed
-    private String body;
+  @Column(nullable = false, length = 65535)
+  private String body;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bug_id", nullable = false)
-    private Bug bug;
+  @Embedded
+  private TimeAudit timeAudit = new TimeAudit();
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "bug_id", nullable = false)
+  private Bug bug;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 }
