@@ -12,6 +12,8 @@ import lombok.Setter;
 @Builder
 public class BugDto {
 
+  private Long id;
+
   private String title;
 
   private String body;

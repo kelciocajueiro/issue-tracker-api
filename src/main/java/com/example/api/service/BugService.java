@@ -1,11 +1,15 @@
 package com.example.api.service;
 
 import com.example.api.exception.BugNotFoundException;
+import com.example.api.exception.UserNotFoundException;
 import com.example.api.mapper.BugMapper;
 import com.example.api.model.Bug;
+import com.example.api.model.BugStatus;
+import com.example.api.model.User;
 import com.example.api.model.dto.BugDto;
-import com.example.api.model.dto.BugRequestDto;
+import com.example.api.model.dto.NewBugDto;
 import com.example.api.repository.BugRepository;
+import com.example.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,49 +18,74 @@ import org.springframework.stereotype.Service;
 @Service
 public class BugService {
 
-  private final BugRepository bugRepository;
-  private final BugMapper bugMapper;
+  private final BugRepository repository;
+  private final UserRepository userRepository;
+  private final BugMapper mapper;
 
   @Autowired
-  public BugService(BugRepository bugRepository, BugMapper bugMapper) {
-    this.bugRepository = bugRepository;
-    this.bugMapper = bugMapper;
+  public BugService(BugRepository repository, UserRepository userRepository, BugMapper mapper) {
+    this.repository = repository;
+    this.userRepository = userRepository;
+    this.mapper = mapper;
   }
 
-  public BugDto create(BugRequestDto newBugDto) {
-    Bug savedBug = bugRepository.save(bugMapper.newBugDtoToBug(newBugDto));
-    return bugMapper.toBugDto(savedBug);
+  public BugDto create(NewBugDto newBugDto) {
+    Bug savedBug = repository.save(mapper.newBugDtoToBug(newBugDto));
+    return mapper.toBugDto(savedBug);
   }
 
-  public BugDto edit(long bugId, BugRequestDto editBugDto) {
-    Bug bug = bugRepository.findById(bugId).orElseThrow(() -> new BugNotFoundException(bugId));
+  public BugDto edit(long bugId, NewBugDto editBugDto) {
+    Bug bug = repository.findById(bugId).orElseThrow(() -> new BugNotFoundException(bugId));
 
-    bug.setTitle(editBugDto.getTitle());
-    bug.setBody(editBugDto.getBody());
-    bug.setStatus(editBugDto.getStatus());
+    bug.setTitle(editBugDto.title());
+    bug.setBody(editBugDto.body());
+    bug.setStatus(editBugDto.status());
 
-    bug = bugRepository.save(bug);
+    bug = repository.save(bug);
 
-    return bugMapper.toBugDto(bug);
+    return mapper.toBugDto(bug);
   }
 
   public void delete(long bugId) {
-    bugRepository
+    repository
         .findById(bugId)
         .ifPresentOrElse(
-            bugRepository::delete,
+            repository::delete,
             () -> {
               throw new BugNotFoundException(bugId);
             });
   }
 
   public Page<BugDto> findAll(Pageable pageable) {
-    return bugRepository.findAll(pageable).map(bugMapper::toBugDto);
+    return repository.findAll(pageable).map(mapper::toBugDto);
   }
 
   public BugDto findById(long bugId) {
-    return bugRepository.findById(bugId)
-        .map(bugMapper::toBugDto)
+    return repository
+        .findById(bugId)
+        .map(mapper::toBugDto)
         .orElseThrow(() -> new BugNotFoundException(bugId));
+  }
+
+  public BugDto changeBugStatus(Long bugId, BugStatus status) {
+    Bug bug = repository.findById(bugId).orElseThrow(() -> new BugNotFoundException(bugId));
+    bug.setStatus(status);
+    bug = repository.save(bug);
+
+    return mapper.toBugDto(bug);
+  }
+
+  public Page<BugDto> findAllResolved(Pageable pageable) {
+    return repository.findByStatus(BugStatus.RESOLVED, pageable).map(mapper::toBugDto);
+  }
+
+  public BugDto assignBugToUser(Long bugId, Long userId) {
+    Bug bug = repository.findById(bugId).orElseThrow(() -> new BugNotFoundException(bugId));
+    User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+    bug.setAssignedUser(user);
+    bug = repository.save(bug);
+
+    return mapper.toBugDto(repository.save(bug));
   }
 }

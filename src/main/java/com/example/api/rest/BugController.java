@@ -1,9 +1,9 @@
 package com.example.api.rest;
 
+import com.example.api.model.BugStatus;
 import com.example.api.model.dto.BugDto;
-import com.example.api.model.dto.BugRequestDto;
+import com.example.api.model.dto.NewBugDto;
 import com.example.api.service.BugService;
-import com.example.api.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,24 +13,22 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("v1/bugs")
-public class BugController implements BugApi {
+public class BugController {
 
   private final BugService bugService;
-  private final CommentService commentService;
 
   @Autowired
-  public BugController(BugService bugService, CommentService commentService) {
+  public BugController(BugService bugService) {
     this.bugService = bugService;
-    this.commentService = commentService;
   }
 
   @PostMapping
-  public ResponseEntity<BugDto> createBug(@RequestBody BugRequestDto newBugDto) {
+  public ResponseEntity<BugDto> createBug(@RequestBody NewBugDto newBugDto) {
     return ResponseEntity.status(HttpStatus.CREATED).body(bugService.create(newBugDto));
   }
 
   @PutMapping(value = "/{id}")
-  public ResponseEntity<BugDto> editBug(@PathVariable long id, @RequestBody BugRequestDto editBugDto) {
+  public ResponseEntity<BugDto> editBug(@PathVariable long id, @RequestBody NewBugDto editBugDto) {
     return ResponseEntity.ok(bugService.edit(id, editBugDto));
   }
 
@@ -50,7 +48,24 @@ public class BugController implements BugApi {
     return ResponseEntity.ok(bugService.findById(id));
   }
 
-//  @PostMapping(value = "/{id}/comments")
-//  public ResponseEntity<Comm>
+  @PutMapping("/{id}/resolve")
+  public ResponseEntity<BugDto> markBugAsResolved(@PathVariable long id) {
+    return ResponseEntity.ok(bugService.changeBugStatus(id, BugStatus.RESOLVED));
+  }
+
+  @PutMapping("/{id}/unresolve")
+  public ResponseEntity<BugDto> markBugAsUnresolved(@PathVariable long id) {
+    return ResponseEntity.ok(bugService.changeBugStatus(id, BugStatus.UNRESOLVED));
+  }
+
+  @GetMapping("/resolved")
+  public Page<BugDto> findAllResolved(Pageable pageable) {
+    return bugService.findAllResolved(pageable);
+  }
+
+  @PutMapping("/{id}/assign/{userId}")
+  public ResponseEntity<BugDto> assignBugToUser(@PathVariable Long id, @PathVariable Long userId) {
+    return ResponseEntity.ok(bugService.assignBugToUser(id, userId));
+  }
 
 }

@@ -40,7 +40,9 @@ public class CommentService {
     return commentMapper.toCommentDto(comment);
   }
 
-  public void delete(long commentId) {
+  public void delete(long bugId, long commentId) {
+    Bug bug = bugRepository.findById(bugId).orElseThrow(() -> new BugNotFoundException(bugId));
+
     Comment comment =
         commentRepository
             .findById(commentId)
