@@ -1,12 +1,12 @@
 package com.example.api.service;
 
+import com.example.api.dto.CommentDto;
+import com.example.api.dto.NewCommentDto;
 import com.example.api.exception.BugNotFoundException;
 import com.example.api.exception.CommentNotFoundException;
 import com.example.api.mapper.CommentMapper;
 import com.example.api.model.Bug;
 import com.example.api.model.Comment;
-import com.example.api.model.dto.CommentDto;
-import com.example.api.model.dto.NewCommentDto;
 import com.example.api.repository.BugRepository;
 import com.example.api.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;

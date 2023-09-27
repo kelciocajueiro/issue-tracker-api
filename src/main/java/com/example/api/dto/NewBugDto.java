@@ -1,4 +1,4 @@
-package com.example.api.model.dto;
+package com.example.api.dto;
 
 import com.example.api.model.BugStatus;
 

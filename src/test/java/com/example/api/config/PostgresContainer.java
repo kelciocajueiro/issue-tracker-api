@@ -1,13 +1,12 @@
-package com.example.api.infra;
+package com.example.api.config;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
+
+import java.time.Duration;
 import lombok.SneakyThrows;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.utility.MountableFile;
-
-import java.time.Duration;
-
-import static java.time.temporal.ChronoUnit.SECONDS;
 
 /**
  * This is a Singleton container, which means that is only started once for some IT test classes

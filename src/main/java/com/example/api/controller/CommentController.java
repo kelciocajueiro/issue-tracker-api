@@ -1,7 +1,7 @@
-package com.example.api.rest;
+package com.example.api.controller;
 
-import com.example.api.model.dto.CommentDto;
-import com.example.api.model.dto.NewCommentDto;
+import com.example.api.dto.CommentDto;
+import com.example.api.dto.NewCommentDto;
 import com.example.api.service.CommentService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;

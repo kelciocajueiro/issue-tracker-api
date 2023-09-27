@@ -1,4 +1,4 @@
-package com.example.api.infra;
+package com.example.api.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 

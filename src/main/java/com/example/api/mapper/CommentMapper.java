@@ -1,7 +1,7 @@
 package com.example.api.mapper;
 
+import com.example.api.dto.CommentDto;
 import com.example.api.model.Comment;
-import com.example.api.model.dto.CommentDto;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

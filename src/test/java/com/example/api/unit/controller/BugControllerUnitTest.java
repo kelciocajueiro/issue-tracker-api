@@ -1,6 +1,6 @@
 package com.example.api.unit.controller;
 
-import com.example.api.rest.BugController;
+import com.example.api.controller.BugController;
 import com.example.api.service.BugService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

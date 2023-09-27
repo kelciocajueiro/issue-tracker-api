@@ -1,4 +1,4 @@
-package com.example.api.infra;
+package com.example.api.config;
 
 import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;

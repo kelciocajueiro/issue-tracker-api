@@ -1,6 +1,6 @@
 package com.example.api.integration.repository;
 
-import com.example.api.infra.PostgresContainer;
+import com.example.api.config.PostgresContainer;
 import org.junit.ClassRule;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;

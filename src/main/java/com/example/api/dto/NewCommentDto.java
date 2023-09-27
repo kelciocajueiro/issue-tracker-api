@@ -1,3 +1,3 @@
-package com.example.api.model.dto;
+package com.example.api.dto;
 
 public record NewCommentDto(String title, String body) {}

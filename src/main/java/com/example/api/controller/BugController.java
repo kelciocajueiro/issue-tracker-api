@@ -1,8 +1,8 @@
-package com.example.api.rest;
+package com.example.api.controller;
 
+import com.example.api.dto.BugDto;
+import com.example.api.dto.NewBugDto;
 import com.example.api.model.BugStatus;
-import com.example.api.model.dto.BugDto;
-import com.example.api.model.dto.NewBugDto;
 import com.example.api.service.BugService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
