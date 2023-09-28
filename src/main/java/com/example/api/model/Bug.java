@@ -25,6 +25,10 @@ public class Bug {
   @Column(nullable = false)
   private BugStatus status;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private Priority priority;
+
   @Embedded
   private TimeAudit timeAudit = new TimeAudit();
 
